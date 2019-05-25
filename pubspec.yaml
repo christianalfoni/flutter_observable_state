@@ -1,6 +1,6 @@
 name: flutter_observable_state
 description: Observable state for flutter applications
-version: 1.0.0
+version: 1.0.1
 author: Christian Alfoni<christianalfoni@gmail.com>
 homepage: https://github.com/christianalfoni/flutter_observable_state
 environment:

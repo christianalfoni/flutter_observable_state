@@ -11,7 +11,7 @@ import 'package:flutter_observable_state/flutter_observable_state.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 
 class TestWidget extends StatelessWidget {
-  StreamBuilder observer;
+  Widget observer;
   
   TestWidget(this.observer);
 

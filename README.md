@@ -67,7 +67,7 @@ You can use this file to also register effects you want to perform. For example 
 
 ```dart
 // AppState.dart
-import 'package:observable_state/observable_state.dart';
+import 'package:flutter_observable_state/flutter_observable_state.dart';
 
 class AppState {
   final count = Observable(0);
@@ -80,8 +80,8 @@ import 'package:my_project/services.dart';
 class Actions {
   final _state = getIt.get<AppState>();
 
-  void changeCount() {
-    _state.count.change((count) => count + 1)
+  void changeCount(int count) {
+    _state.count.change((currentCount) => currentCount + count)
   }
 }
 ```
@@ -257,4 +257,4 @@ class Actions {
 
 ## How does it work?
 
-Dart is a single threaded language, meaning that only one **observe** can run at any time. That means the library orchestrates the execution of **observe** and **Computed** with the execution of any **Observable.get** globally. The **Computed** are considered to live as long as the application lives, while **observe** uses the **StreamBuilder** where it clears out existing subscriptions when it builds.
+Dart is a single threaded language, meaning that only one **observe** can run at any time. That means the library orchestrates the execution of **observe** and **Computed** with the execution of any **Observable.get** globally. The **Computed** are considered to live as long as the application lives, while **observe** uses the **StreamBuilder** where it clears out existing subscriptions when it builds and when the widget is disposed.

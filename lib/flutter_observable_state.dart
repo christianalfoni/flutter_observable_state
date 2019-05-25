@@ -31,7 +31,7 @@ class Observer {
     });
   }
 
-  getStreamBuilder(Widget Function() cb) {
+  StreamBuilder getStreamBuilder(Widget Function() cb) {
     return StreamBuilder(
       stream: _subject.stream,
       builder: (_, __) {
@@ -48,8 +48,33 @@ class Observer {
   }
 }
 
-StreamBuilder observe(Widget Function() cb) {
-  return Observer().getStreamBuilder(cb);
+class ObserverWidget extends StatefulWidget {
+  final Widget Function() cb;
+  ObserverWidget(this.cb);
+  State createState() => _ObserverWidgetState();
+}
+
+class _ObserverWidgetState extends State<ObserverWidget> {
+  Observer _observer;
+
+  _ObserverWidgetState() {
+     _observer = Observer();
+  }
+  
+  @override
+  void dispose() {
+    _observer._clear();
+    super.dispose();
+  }
+
+  @override
+  Widget build(context) {
+    return _observer.getStreamBuilder(widget.cb);
+  }
+}
+
+Widget observe(Widget Function() cb) {
+  return ObserverWidget(cb);
 }
 
 class Observable<T> {

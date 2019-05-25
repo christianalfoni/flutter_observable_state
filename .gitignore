@@ -4,6 +4,8 @@
 .dart_tool/
 .packages
 .pub/
+ios
+android
 .metadata
 flutter_observable_state.iml
 .DS_Store
