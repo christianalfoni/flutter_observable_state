@@ -1,0 +1,14 @@
+name: flutter_observable_state
+description: Observable state for flutter applications
+version: 1.0.0
+author: Christian Alfoni<christianalfoni@gmail.com>
+homepage: https://github.com/christianalfoni/flutter_observable_state
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  rxdart: ^0.21.0
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
