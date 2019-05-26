@@ -1,6 +1,6 @@
 name: flutter_observable_state
-description: Observable state for flutter applications
-version: 1.0.1
+description: Simple and powerful state management for Flutter applications. With minimal boilerplate, stream support and computed state
+version: 1.0.1+1
 author: Christian Alfoni<christianalfoni@gmail.com>
 homepage: https://github.com/christianalfoni/flutter_observable_state
 environment:
@@ -12,3 +12,4 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  get_it: 1.0.3+1

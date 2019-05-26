@@ -12,14 +12,12 @@ import 'package:rxdart/rxdart.dart' as rx;
 
 class TestWidget extends StatelessWidget {
   Widget observer;
-  
+
   TestWidget(this.observer);
 
   @override
   Widget build(context) {
-    return Container(
-      child: this.observer
-    );
+    return Container(child: this.observer);
   }
 }
 
@@ -77,7 +75,6 @@ void main() {
 
     expect(find.text('BAR'), findsOneWidget);
   });
-
 
   testWidgets('Updates when stream updates', (WidgetTester tester) async {
     final state = State();

@@ -33,18 +33,17 @@ class Observer {
 
   StreamBuilder getStreamBuilder(Widget Function() cb) {
     return StreamBuilder(
-      stream: _subject.stream,
-      builder: (_, __) {
-        _clear();
-        
-        final observer = currentObserver;
-        currentObserver = this;
-        final result = cb();
-        currentObserver = observer;
+        stream: _subject.stream,
+        builder: (_, __) {
+          _clear();
 
-        return result;
-      }
-    );
+          final observer = currentObserver;
+          currentObserver = this;
+          final result = cb();
+          currentObserver = observer;
+
+          return result;
+        });
   }
 }
 
@@ -58,9 +57,9 @@ class _ObserverWidgetState extends State<ObserverWidget> {
   Observer _observer;
 
   _ObserverWidgetState() {
-     _observer = Observer();
+    _observer = Observer();
   }
-  
+
   @override
   void dispose() {
     _observer._clear();
@@ -79,9 +78,9 @@ Widget observe(Widget Function() cb) {
 
 class Observable<T> {
   StreamSubscription<T> _stream;
-	rx.BehaviorSubject<T> _subject;
+  rx.BehaviorSubject<T> _subject;
   rx.Observable<T> get $stream => _subject.stream;
-  
+
   T get() {
     if (currentObserver != null) {
       currentObserver.addListener($stream);
@@ -89,7 +88,6 @@ class Observable<T> {
 
     return _subject.value;
   }
-
 
   void setStream(Stream<T> stream) {
     if (_stream != null) {
@@ -120,7 +118,7 @@ class Computed<T> extends Observer {
   T Function() cb;
   bool _isDirty = true;
   dynamic _cachedResult;
-  
+
   Computed(this.cb) : super() {
     _subject.stream.listen((_) {
       _isDirty = true;
@@ -137,11 +135,12 @@ class Computed<T> extends Observer {
       _isDirty = false;
     }
 
-    if (currentObserver != null && !_subscriptions.containsKey(_subject.stream)) {
+    if (currentObserver != null &&
+        !_subscriptions.containsKey(_subject.stream)) {
       final observer = currentObserver;
       observer._subscriptions[_subject.stream] = _subject.stream.listen((data) {
-          observer._subject.add(data);
-        });
+        observer._subject.add(data);
+      });
     }
 
     return _cachedResult;
