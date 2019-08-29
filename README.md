@@ -215,6 +215,49 @@ class MyWidget extends StatelessWidget {
 }
 ```
 
+### Reaction
+
+You can observe state and react to it. This is useful when you need to do some imperative logic inside your widgets. For example here we are controlling an overlay from our application state:
+
+```dart
+class MyWidget extends StatefulWidget {
+  @override
+  createState() => MyWidgetState();
+}
+
+class MyWidgetState extends State<MyWidget> {
+  final _state = getIt.get<AppState>();
+  Reaction reaction;
+  OverlayEntry overlay;
+
+  @override
+  void initState() {
+    reaction = Reaction(
+      () => _state.isOverlayOpen.get(),
+      () => {
+        if (_state.isOverlayOpen.get() && overlay == null) {
+          overlay = _createOverlayEntry();
+          Overlay.of(context).insert(overlay);
+        } else if (!_state.isOverlayOpen.get() && overlay != null) {
+          overlay.remove();
+          overlay = null;
+        }
+      }
+    )
+    super.initState();
+  }
+
+  @override
+  Widget build(context) {
+    return Container(
+      child: observe(() => (
+        Text(_state.foo.get())
+      ))
+    )
+  }
+}
+```
+
 ## Models
 
 You can use **Observable** with whatever classes you want, even inside widgets. Typically though you want to use it with classes representing models. For example you want to track optimistically adding a like to posts.

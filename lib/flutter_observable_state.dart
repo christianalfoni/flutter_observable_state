@@ -72,6 +72,27 @@ class _ObserverWidgetState extends State<ObserverWidget> {
   }
 }
 
+class Reaction extends Observer {
+  Function() trackCb;
+  Function() cb;
+
+  Reaction(this.trackCb, this.cb) : super() {
+    _subject.stream.listen((_) {
+      cb();
+    });
+    
+    var previousObserver = currentObserver;
+    currentObserver = this;
+    trackCb();
+    currentObserver = previousObserver;
+  }
+
+  void dispose() {
+    _clear();
+  }
+}
+
+
 Widget observe(Widget Function() cb) {
   return ObserverWidget(cb);
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_observable_state/flutter_observable_state.dart';
 
-import 'Actions.dart';
+import 'AppActions.dart';
 import 'AppState.dart';
 import 'services.dart';
 
 class App extends StatelessWidget {
   final _state = getIt.get<AppState>();
-  final _actions = getIt.get<Actions>();
+  final _actions = getIt.get<AppActions>();
 
   @override
   Widget build(context) {

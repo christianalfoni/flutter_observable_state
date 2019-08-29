@@ -21,18 +21,48 @@ class TestWidget extends StatelessWidget {
   }
 }
 
-class State {
+class ReactionWidget extends StatefulWidget {
+  Function trackCb;
+  Function cb;
+  
+  ReactionWidget(this.trackCb, this.cb);
+
+  createState() => ReactionWidgetState();
+}
+
+class ReactionWidgetState extends State<ReactionWidget> {
+  Reaction reaction;
+
+  @override
+  void initState() {
+    reaction = Reaction(widget.trackCb, widget.cb);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    reaction.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(context) {
+    return Container();
+  }
+}
+
+class AppState {
   final foo = Observable("bar");
   Computed<String> upperFoo;
 
-  State() {
+  AppState() {
     upperFoo = Computed(() => foo.get().toUpperCase());
   }
 }
 
 void main() {
   testWidgets('Updates when setting state', (WidgetTester tester) async {
-    final state = State();
+    final state = AppState();
 
     await tester.pumpWidget(TestWidget(observe(() {
       return Text(state.foo.get(), textDirection: TextDirection.ltr);
@@ -47,7 +77,7 @@ void main() {
   });
 
   testWidgets('Updates when changing state', (WidgetTester tester) async {
-    final state = State();
+    final state = AppState();
 
     await tester.pumpWidget(TestWidget(observe(() {
       return Text(state.foo.get(), textDirection: TextDirection.ltr);
@@ -62,7 +92,7 @@ void main() {
   });
 
   testWidgets('Updates when changing state', (WidgetTester tester) async {
-    final state = State();
+    final state = AppState();
 
     await tester.pumpWidget(TestWidget(observe(() {
       return Text(state.foo.get(), textDirection: TextDirection.ltr);
@@ -77,7 +107,7 @@ void main() {
   });
 
   testWidgets('Updates when stream updates', (WidgetTester tester) async {
-    final state = State();
+    final state = AppState();
     var stream = rx.BehaviorSubject<String>();
 
     state.foo.setStream(stream);
@@ -95,7 +125,7 @@ void main() {
   });
 
   testWidgets('Computed state', (WidgetTester tester) async {
-    final state = State();
+    final state = AppState();
 
     await tester.pumpWidget(TestWidget(observe(() {
       return Text(state.upperFoo.get(), textDirection: TextDirection.ltr);
@@ -107,5 +137,29 @@ void main() {
     await tester.pump(Duration.zero);
 
     expect(find.text('BAZ'), findsOneWidget);
+  });
+
+  testWidgets('Reaction', (WidgetTester tester) async {
+    final state = AppState();
+    var runCount = 0;
+
+    await tester.pumpWidget(ReactionWidget(() => state.foo.get(), () {
+      runCount++;
+    }));
+
+    expect(runCount, 0);
+
+    state.foo.set("baz");
+    await tester.pump(Duration.zero);
+
+    expect(runCount, 1);
+
+    await tester.pumpWidget(Container());
+
+    state.foo.set("baz2");
+
+    await tester.pump(Duration.zero);
+
+    expect(runCount, 1);
   });
 }

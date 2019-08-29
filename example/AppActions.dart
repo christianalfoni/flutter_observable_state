@@ -2,7 +2,7 @@ import 'AppState.dart';
 import 'ConsoleEffect.dart';
 import 'services.dart';
 
-class Actions {
+class AppActions {
   final _state = getIt.get<AppState>();
   final _console = getIt.get<ConsoleEffect>();
 
