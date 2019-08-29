@@ -1,3 +1,7 @@
+# 1.1.0
+
+Added **Reaction**
+
 # 1.0.1+1
 
 Example, description and formatting
