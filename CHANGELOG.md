@@ -1,3 +1,7 @@
+# 1.1.0+1
+
+Fix void typing in Reaction
+
 # 1.1.0
 
 Added **Reaction**

@@ -73,8 +73,8 @@ class _ObserverWidgetState extends State<ObserverWidget> {
 }
 
 class Reaction extends Observer {
-  Function() trackCb;
-  Function() cb;
+  dynamic Function() trackCb;
+  void Function() cb;
 
   Reaction(this.trackCb, this.cb) : super() {
     _subject.stream.listen((_) {
