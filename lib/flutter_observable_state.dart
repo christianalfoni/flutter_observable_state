@@ -6,9 +6,10 @@ Observer currentObserver;
 
 class Observer {
   Map<rx.Observable, StreamSubscription> _subscriptions = Map();
-  rx.BehaviorSubject _subject = rx.BehaviorSubject();
+  rx.BehaviorSubject _subject;
 
   Observer() {
+    _subject = rx.BehaviorSubject.seeded(null);
     _subject.onCancel = () {
       _clear();
     };
@@ -30,21 +31,6 @@ class Observer {
       _subject.add(data);
     });
   }
-
-  StreamBuilder getStreamBuilder(Widget Function() cb) {
-    return StreamBuilder(
-        stream: _subject.stream,
-        builder: (_, __) {
-          _clear();
-
-          final observer = currentObserver;
-          currentObserver = this;
-          final result = cb();
-          currentObserver = observer;
-
-          return result;
-        });
-  }
 }
 
 class ObserverWidget extends StatefulWidget {
@@ -55,20 +41,42 @@ class ObserverWidget extends StatefulWidget {
 
 class _ObserverWidgetState extends State<ObserverWidget> {
   Observer _observer;
+  StreamSubscription _listenSubscription;
+  bool _isMounted = false;
 
   _ObserverWidgetState() {
     _observer = Observer();
   }
 
   @override
+  void initState() {
+    _listenSubscription = _observer._subject.stream.listen((data) {
+      if (_isMounted) {
+        setState(() {});
+      }
+    });
+    _isMounted = true;
+    super.initState();
+  }
+
+  @override
   void dispose() {
+    _isMounted = false;
+    _listenSubscription.cancel();
     _observer._clear();
     super.dispose();
   }
 
   @override
   Widget build(context) {
-    return _observer.getStreamBuilder(widget.cb);
+    _observer._clear();
+
+    final observer = currentObserver;
+    currentObserver = this._observer;
+    final result = widget.cb();
+    currentObserver = observer;
+
+    return result;
   }
 }
 
@@ -77,7 +85,7 @@ class Reaction extends Observer {
   void Function() cb;
 
   Reaction(this.trackCb, this.cb) : super() {
-    _subject.stream.listen((_) {
+    _subject.stream.skip(1).listen((_) {
       cb();
     });
     
@@ -156,12 +164,14 @@ class Computed<T> extends Observer {
       _isDirty = false;
     }
 
-    if (currentObserver != null &&
-        !_subscriptions.containsKey(_subject.stream)) {
+    if (currentObserver != null) {
       final observer = currentObserver;
+      currentObserver.addListener(_subject);
+      /*
       observer._subscriptions[_subject.stream] = _subject.stream.listen((data) {
         observer._subject.add(data);
       });
+      */
     }
 
     return _cachedResult;

@@ -76,6 +76,25 @@ void main() {
     expect(find.text('bar2'), findsOneWidget);
   });
 
+  testWidgets('Updates only once setting state synchronously', (WidgetTester tester) async {
+    final state = AppState();
+    int runCount = 0;
+
+    await tester.pumpWidget(TestWidget(observe(() {
+      runCount++;
+      return Text(state.foo.get(), textDirection: TextDirection.ltr);
+    })));
+
+    expect(find.text('bar'), findsOneWidget);
+
+    state.foo.set("bar2");
+    state.foo.set("bar3");
+    await tester.pump(Duration(seconds: 1));
+
+    expect(find.text('bar3'), findsOneWidget);
+    expect(runCount, 2);
+  });
+
   testWidgets('Updates when changing state', (WidgetTester tester) async {
     final state = AppState();
 
@@ -157,7 +176,6 @@ void main() {
     await tester.pumpWidget(Container());
 
     state.foo.set("baz2");
-
     await tester.pump(Duration.zero);
 
     expect(runCount, 1);
