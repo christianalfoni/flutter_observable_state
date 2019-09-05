@@ -1,3 +1,7 @@
+# 1.1.0+2
+
+Fix bug with computed and drop StreamBuilder
+
 # 1.1.0+1
 
 Fix void typing in Reaction
