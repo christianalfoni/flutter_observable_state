@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart' as rx;
+import 'package:rxdart/rxdart.dart';
 
 Observer currentObserver;
 
 class Observer {
-  Map<rx.Observable, StreamSubscription> _subscriptions = Map();
-  rx.BehaviorSubject _subject;
+  Map<Stream, StreamSubscription> _subscriptions = Map();
+  BehaviorSubject _subject;
 
   Observer() {
-    _subject = rx.BehaviorSubject.seeded(null);
+    _subject = BehaviorSubject.seeded(null);
     _subject.onCancel = () {
       _clear();
     };
@@ -22,7 +22,7 @@ class Observer {
     _subscriptions.clear();
   }
 
-  addListener(rx.Observable rxObservable) {
+  addListener(Stream rxObservable) {
     if (_subscriptions.containsKey(rxObservable)) {
       return;
     }
@@ -88,7 +88,7 @@ class Reaction extends Observer {
     _subject.stream.skip(1).listen((_) {
       cb();
     });
-    
+
     var previousObserver = currentObserver;
     currentObserver = this;
     trackCb();
@@ -100,15 +100,14 @@ class Reaction extends Observer {
   }
 }
 
-
 Widget observe(Widget Function() cb) {
   return ObserverWidget(cb);
 }
 
 class Observable<T> {
   StreamSubscription<T> _stream;
-  rx.BehaviorSubject<T> _subject;
-  rx.Observable<T> get $stream => _subject.stream;
+  BehaviorSubject<T> _subject;
+  Stream<T> get $stream => _subject.stream;
 
   T get() {
     if (currentObserver != null) {
@@ -139,7 +138,7 @@ class Observable<T> {
   }
 
   Observable(T initialValue) {
-    this._subject = rx.BehaviorSubject.seeded(initialValue);
+    this._subject = BehaviorSubject.seeded(initialValue);
   }
 }
 

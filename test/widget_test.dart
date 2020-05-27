@@ -24,7 +24,7 @@ class TestWidget extends StatelessWidget {
 class ReactionWidget extends StatefulWidget {
   Function trackCb;
   Function cb;
-  
+
   ReactionWidget(this.trackCb, this.cb);
 
   createState() => ReactionWidgetState();
@@ -76,7 +76,8 @@ void main() {
     expect(find.text('bar2'), findsOneWidget);
   });
 
-  testWidgets('Updates only once setting state synchronously', (WidgetTester tester) async {
+  testWidgets('Updates only once setting state synchronously',
+      (WidgetTester tester) async {
     final state = AppState();
     int runCount = 0;
 
