@@ -1,3 +1,7 @@
+# 1.3.0
+
+Updated to latest rxjs
+
 # 1.1.0+2
 
 Fix bug with computed and drop StreamBuilder
